@@ -1,4 +1,4 @@
-# Prácticas TAD - ITIC2795
+# Prácticas TAD - ITI2795
 Implementaciones TAD en C/C++
 
 En esta asignatura estudiaremos la modelización matemática e implementación en código de los tipos de datos abstractos. Además, se utilizarán para realizar diversas práctucas durante el curso.

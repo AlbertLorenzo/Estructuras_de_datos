@@ -9,14 +9,16 @@ TADs
     - Listas enlazadas
     - Listas doblemente enlazadas
     - Listas circulares
-
-- Pilas
-
-- Colas
+    - Pilas
+    - Colas
 
 - Conjunto
 
 - Bolsa
+
+- Diccionario
+
+- Tabla hash
 
 - Árboles
     - Árbol Trie

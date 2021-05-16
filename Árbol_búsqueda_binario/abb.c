@@ -219,39 +219,88 @@ void recorrido_postorden(struct nodo_arbol *raiz)
 
 struct nodo_arbol *borrar_nodo_arbol(struct nodo_arbol *raiz, int clave)
 {
-    if (!raiz)
+    struct nodo_arbol *nodo_actual = raiz_arbol(arbol), *nodo_previo = NULL, *nodo_aux;
+
+    while (nodo_actual && nodo_actual->clave != clave)
     {
-        return raiz;
+        nodo_previo = nodo_actual;
+        nodo_actual = (clave < nodo_actual->clave) ? nodo_actual->izquierda : nodo_actual->derecha;
     }
 
-    if (clave < raiz->clave)
+    if (!nodo_actual)
     {
-        raiz->izquierda = borrar_nodo_arbol(raiz->izquierda, clave);
+        printf("El nodo no existe.");
+        return;
     }
-    else if (clave > raiz->clave)
+
+    // El nodo no tiene hijos
+    if (!nodo_actual->izquierda && !nodo_actual->derecha)
     {
-        raiz->derecha = borrar_nodo_arbol(raiz->derecha, clave);
-    }
-    else
-    {
-        if (raiz->izquierda == NULL)
+        if (nodo_previo)
         {
-            struct nodo_arbol *nodo_aux = raiz->derecha;
-            free(raiz);
-            return nodo_aux;
+            if (nodo_previo->derecha == nodo_actual)
+            {
+                nodo_previo->derecha = NULL;
+            }
+            else
+            {
+                nodo_previo->izquierda = NULL;
+            }
         }
-        else if (raiz->derecha == NULL)
+        else
         {
-            struct nodo_arbol *nodo_aux = raiz->izquierda;
-            free(raiz);
-            return nodo_aux;
+            arbol->raiz = NULL;
+        }
+        free(nodo_actual);
+        return;
+    }
+
+    // El nodo tiene un hijo
+    if (!nodo_actual->izquierda || !nodo_actual->derecha)
+    {
+        nodo_aux = (nodo_actual->izquierda) ? nodo_actual->izquierda : nodo_actual->derecha;
+        if (nodo_previo)
+        {
+            if (nodo_previo->derecha == nodo_actual)
+            {
+                nodo_previo->derecha = nodo_aux;
+            }
+            else
+            {
+                nodo_previo->izquierda = nodo_aux;
+            }
+        }
+        else
+        {
+            arbol->raiz = nodo_aux;
+        }
+        free(nodo_actual);
+        return;
+    }
+
+    // El nodo tiene dos hijos
+    if (nodo_actual->izquierda && nodo_actual->derecha)
+    {
+        struct nodo_arbol *nodo_previo_aux = NULL, *nodo_temporal;
+        nodo_temporal = nodo_actual->derecha;
+        while (nodo_temporal->izquierda)
+        {
+            nodo_previo_aux = nodo_temporal;
+            nodo_temporal = nodo_temporal->izquierda;
         }
 
-        struct nodo_arbol *nodo_aux = nodo_arbol_minimo_izq(raiz->derecha);
-        raiz->clave = nodo_aux->clave;
-        raiz->derecha = borrar_nodo_arbol(raiz->derecha, nodo_aux->clave);
+        if (nodo_previo_aux)
+        {
+            nodo_previo_aux->izquierda = nodo_temporal->derecha;
+        }
+        else
+        {
+            nodo_actual->derecha = nodo_temporal->derecha;
+        }
+
+        nodo_actual->clave = nodo_temporal->clave;
+        free(nodo_temporal);
     }
-    return raiz;
 }
 
 int grado_arbol_recurs(struct nodo_arbol *nodo)
